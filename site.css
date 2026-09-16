@@ -25,6 +25,22 @@ a.envoyer { display: inline-block; text-decoration: none; }
 .ecrire .ecrire__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
 .ecrire .ecrire__retour { min-height: 1.6em; font-size: var(--t-s); color: var(--orange-texte); text-align: left; }
 
+/* ——— L'agence : « Nos outils », une rangée par logiciel dans un seul bandeau ——— */
+.outils__intro { max-width: 72ch; margin: 0 0 22px; color: var(--graphite); text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.logiciels { list-style: none; margin: 0; padding: 0 clamp(22px, 4vw, 44px); background: var(--pierre); }
+.logiciels .outil {
+  background: none; padding: clamp(18px, 2.6vw, 28px) 0;
+  grid-template-columns: 11rem minmax(0, 1fr) auto; align-items: baseline; gap: 6px 40px;
+}
+.logiciels .outil + .outil { border-top: 1px solid var(--ombre); }
+.logiciels .outil h3 { margin: 0; }
+.logiciels .outil p { max-width: 70ch; }
+@media (max-width: 860px) {
+  .logiciels .outil { grid-template-columns: 1fr; }
+  .logiciels .outil .lien-fleche { justify-self: start; margin-top: 6px; }
+  .logiciels .outil span:empty { display: none; }
+}
+
 /* ——— Fiche : vidéo et galerie ——— */
 .fiche__video { margin-top: 18px; }
 .galerie__grille {
