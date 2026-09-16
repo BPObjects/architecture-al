@@ -141,6 +141,38 @@
     visionneuse.addEventListener('close', function () { if (retour) retour.focus(); });
   }
 
+  // ——— Contact : « Copier le modèle » met les rubriques dans le presse-papiers (le lien mailto n'en porte pas) ———
+  var copier = document.querySelector('[data-modele]');
+  var retourModele = document.querySelector('.ecrire__retour');
+  if (copier && retourModele) {
+    var ancienneCopie = function (texte) {
+      var zone = document.createElement('textarea');
+      zone.value = texte;
+      zone.setAttribute('readonly', '');
+      zone.style.position = 'fixed'; zone.style.opacity = '0';
+      document.body.appendChild(zone);
+      zone.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(zone);
+      return ok;
+    };
+    var annoncer = function (ok) {
+      retourModele.textContent = ok
+        ? 'Modèle copié : cliquez sur « Écrire à l’agence », puis collez-le dans le courriel.'
+        : 'La copie n’a pas fonctionné : recopiez les rubriques ci-dessus dans votre courriel.';
+    };
+    copier.hidden = false;
+    copier.addEventListener('click', function () {
+      var texte = copier.getAttribute('data-modele');
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(texte).then(function () { annoncer(true); }, function () { annoncer(ancienneCopie(texte)); });
+      } else {
+        annoncer(ancienneCopie(texte));
+      }
+    });
+  }
+
   // ——— Contact : maquette 3D par défaut, plan avec ?vue=plan ———
   var carte = document.getElementById('carte');
   if (carte && window.CARTE && window.QUARTIER) {

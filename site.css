@@ -13,13 +13,17 @@ main { flex: 1 0 auto; }
 }
 .evitement:focus { top: 8px; }
 
-/* ——— Contact : le formulaire de la maquette devient un courriel prérempli ——— */
+/* ——— Contact : le formulaire de la maquette devient un courriel et un modèle à copier ——— */
 .ecrire { max-width: 62ch; }
 .ecrire p { margin: 0 0 18px; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
 .ecrire .data { font-size: var(--t-s); color: var(--graphite); text-align: left; }
 .ecrire .data a { text-decoration: none; border-bottom: 1px solid var(--ombre); }
 .ecrire .data a:hover { border-bottom-color: var(--orange); }
 a.envoyer { display: inline-block; text-decoration: none; }
+.ecrire__rubriques { margin: -8px 0 22px; padding-left: 1.2em; }
+.ecrire__rubriques li { margin: 2px 0; }
+.ecrire .ecrire__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+.ecrire .ecrire__retour { min-height: 1.6em; font-size: var(--t-s); color: var(--orange-texte); text-align: left; }
 
 /* ——— Fiche : vidéo et galerie ——— */
 .fiche__video { margin-top: 18px; }
