@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -64 400 400">
+  <!-- Le trait du logo Architecture-AL (favicon du site Wix), redessiné en carré ; traits épaissis pour rester lisible en 16-32 px -->
+  <g fill="none" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="14,170 80,104 146,170" stroke="#e0662c"/>
+    <polyline points="154,170 220,104 286,170" stroke="#1d1c1a"/>
+    <polyline points="294,104 294,170 386,170" stroke="#1d1c1a"/>
+  </g>
+</svg>

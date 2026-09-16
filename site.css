@@ -1,0 +1,61 @@
+/* Architecture-AL — compléments du site statique (projets.architecture-al.com).
+   style.css de la maquette est copié tel quel ; ne figure ici que ce qui est nouveau :
+   lien d'évitement, bloc « Écrire à l'agence », galerie et visionneuse des fiches, page introuvable. */
+
+.evitement {
+  position: absolute; left: var(--gouttiere); top: -60px; z-index: 30;
+  background: var(--encre); color: var(--platre); padding: 8px 14px;
+  font-size: var(--t-xs); text-decoration: none;
+}
+.evitement:focus { top: 8px; }
+
+/* ——— Contact : le formulaire de la maquette devient un courriel prérempli ——— */
+.ecrire { max-width: 62ch; }
+.ecrire p { margin: 0 0 18px; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.ecrire .data { font-size: var(--t-s); color: var(--graphite); text-align: left; }
+.ecrire .data a { text-decoration: none; border-bottom: 1px solid var(--ombre); }
+.ecrire .data a:hover { border-bottom-color: var(--orange); }
+a.envoyer { display: inline-block; text-decoration: none; }
+
+/* ——— Fiche : vidéo et galerie ——— */
+.fiche__video { margin-top: 18px; }
+.galerie__grille {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 22px;
+}
+.galerie__grille a { display: block; }
+.galerie__grille img {
+  width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover;
+  background: var(--pierre); transition: opacity .25s;
+}
+.galerie__grille a:hover img { opacity: .86; }
+
+/* Visionneuse : <dialog> natif, Échap le ferme ; flèches gérées par site.js */
+.visionneuse {
+  width: 100vw; height: 100dvh; max-width: none; max-height: none;
+  margin: 0; padding: 0; border: 0;
+  background: rgba(29, 28, 26, .96); color: var(--platre);
+}
+.visionneuse::backdrop { background: rgba(29, 28, 26, .6); }
+.visionneuse figure {
+  margin: 0; height: 100%; padding: 56px 72px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+}
+.visionneuse img { max-width: 100%; max-height: calc(100dvh - 140px); width: auto; height: auto; }
+.visionneuse__compteur { font-size: var(--t-xs); color: var(--ombre); }
+.visionneuse button {
+  position: absolute; background: none; border: 0; cursor: pointer;
+  color: var(--platre); padding: 10px 14px;
+}
+.visionneuse button:hover { color: var(--orange); }
+.visionneuse__fermer { top: 12px; right: var(--gouttiere); font-size: var(--t-xs); }
+.visionneuse__precedent, .visionneuse__suivant { top: 50%; transform: translateY(-50%); font-size: 1.6rem; line-height: 1; }
+.visionneuse__precedent { left: 10px; }
+.visionneuse__suivant { right: 10px; }
+@media (max-width: 640px) {
+  .visionneuse figure { padding: 56px 12px 72px; }
+  .visionneuse__precedent, .visionneuse__suivant { top: auto; bottom: 14px; transform: none; }
+}
+
+/* ——— Page introuvable ——— */
+.introuvable p { max-width: 62ch; margin: 0 0 22px; }
