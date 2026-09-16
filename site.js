@@ -3,6 +3,12 @@
 (function () {
   'use strict';
   var params = new URLSearchParams(location.search);
+  // Textes : français par défaut ; une page d'une autre langue définit window.SITE_TEXTES avant ce script (voir /en/textes.js)
+  var TX = Object.assign({
+    modele_copie: 'Modèle copié : cliquez sur « Écrire à l’agence », puis collez-le dans le courriel.',
+    modele_echec: 'La copie n’a pas fonctionné : recopiez les rubriques ci-dessus dans votre courriel.',
+    carte_erreur: 'La carte n’a pas pu s’afficher sur cet appareil.'
+  }, window.SITE_TEXTES || {});
   function chaque(liste, fn) { Array.prototype.forEach.call(liste, fn); }
 
   // ——— En-tête : menu mobile, filet au défilement ———
@@ -159,8 +165,8 @@
     };
     var annoncer = function (ok) {
       retourModele.textContent = ok
-        ? 'Modèle copié : cliquez sur « Écrire à l’agence », puis collez-le dans le courriel.'
-        : 'La copie n’a pas fonctionné : recopiez les rubriques ci-dessus dans votre courriel.';
+        ? TX.modele_copie
+        : TX.modele_echec;
     };
     copier.hidden = false;
     copier.addEventListener('click', function () {
@@ -179,7 +185,7 @@
     try {
       CARTE.monter(carte, params.get('vue') === 'plan' ? 'plan' : '3d');
     } catch (e) {
-      carte.innerHTML = '<p class="carte__erreur">La carte n’a pas pu s’afficher sur cet appareil.</p>';
+      carte.innerHTML = '<p class="carte__erreur">' + TX.carte_erreur + '</p>';
     }
   }
 })();

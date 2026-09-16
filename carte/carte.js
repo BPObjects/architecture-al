@@ -3,6 +3,17 @@
 var CARTE = (function () {
   'use strict';
   var Q = window.QUARTIER;
+  // Textes : français par défaut ; une page d'une autre langue définit window.CARTE_TEXTES avant ce script (voir /en/textes.js)
+  var TX = Object.assign({
+    batiment: 'Bâtiment · ', hauteur: 'hauteur ', decimale: ',', metro_vh: 'Métro', ligne_vh: 'ligne',
+    erreur_3d: 'La maquette 3D n’a pas pu se charger (three.js indisponible). Le plan reste consultable.',
+    maquette_aria: 'Maquette 3D du quartier autour du 101 boulevard Murat', vue_aria: 'Vue de la carte',
+    maquette_3d: 'Maquette 3D', plan: 'Plan', zoomer: 'Zoomer', dezoomer: 'Dézoomer', recentrer: 'Recentrer',
+    plan_aria: 'Plan de situation du 101 boulevard Murat',
+    aide_plan: 'Glisser pour se déplacer · molette ou pincement pour zoomer · survoler un bâtiment pour sa hauteur.',
+    aide_3d: 'Glisser pour tourner · clic droit ou Maj + glisser pour se déplacer · molette pour zoomer.',
+    sources: ' Sources : IGN BD TOPO® (emprises et hauteurs réelles) ; bouches de métro © contributeurs OpenStreetMap.'
+  }, window.CARTE_TEXTES || {});
   var C = {
     sol: '#ece9e2', voie: '#ffffff', vege: '#dce2d1', sport: '#e3e7d8',
     encre: '#1d1c1a', graphite: '#6f6a62', agence: '#e0662c', agenceTexte: '#e0662c', metro: '#ffcd00',
@@ -52,9 +63,9 @@ var CARTE = (function () {
     var liste = String(lignes || '').split(',').filter(Boolean);
     return '<span class="metro-m" aria-hidden="true">M</span>' + liste.map(function (n) {
       return '<span class="ligne-metro" style="background:' + (LIGNES[n] || '#cfcac2') + '" aria-hidden="true">' + n + '</span>';
-    }).join('') + '<span class="vh">Métro' + (liste.length ? ' ligne ' + liste.join(', ') : '') + ', </span>';
+    }).join('') + '<span class="vh">' + TX.metro_vh + (liste.length ? ' ' + TX.ligne_vh + ' ' + liste.join(', ') : '') + ', </span>';
   }
-  function metres(v) { return v.toFixed(1).replace('.', ',') + ' m'; }
+  function metres(v) { return v.toFixed(1).replace('.', TX.decimale) + ' m'; }
 
   // ——— Plan de situation ———
   function Plan(cv, info) {
@@ -206,7 +217,7 @@ var CARTE = (function () {
       if (trouve !== survol) { survol = trouve; demander(); }
       info.hidden = !trouve;
       if (trouve) {
-        info.textContent = (trouve.siege ? 'Architecture-AL · ' : 'Bâtiment · ') + 'hauteur ' + metres(trouve.h);
+        info.textContent = (trouve.siege ? 'Architecture-AL · ' : TX.batiment) + TX.hauteur + metres(trouve.h);
         info.style.left = Math.min(px + 14, W - info.offsetWidth - 8) + 'px';
         info.style.top = (py + 16) + 'px';
       }
@@ -275,7 +286,7 @@ var CARTE = (function () {
   function Maquette(hote) {
     var T = window.THREE;
     if (!T) {
-      hote.innerHTML = '<p class="carte__erreur">La maquette 3D n’a pas pu se charger (three.js indisponible). Le plan reste consultable.</p>';
+      hote.innerHTML = '<p class="carte__erreur">' + TX.erreur_3d + '</p>';
       return { zoom: function () {}, redessiner: function () {}, detruire: function () {} };
     }
     var W = hote.clientWidth || 800, H = hote.clientHeight || 500, raf = 0;
@@ -286,7 +297,7 @@ var CARTE = (function () {
     hote.appendChild(rendu.domElement);
     var cvs = rendu.domElement;
     cvs.setAttribute('tabindex', '0');
-    cvs.setAttribute('aria-label', 'Maquette 3D du quartier autour du 101 boulevard Murat');
+    cvs.setAttribute('aria-label', TX.maquette_aria);
 
     var scene = new T.Scene();
     scene.background = new T.Color(0xf3f1ed);
@@ -507,25 +518,25 @@ var CARTE = (function () {
     hote.innerHTML =
       '<div class="carte">' +
         '<div class="carte__barre">' +
-          '<div class="bascule" role="group" aria-label="Vue de la carte">' +
-            '<button type="button" class="capitales" data-vue="3d" aria-pressed="false">Maquette 3D</button>' +
-            '<button type="button" class="capitales" data-vue="plan" aria-pressed="true">Plan</button>' +
+          '<div class="bascule" role="group" aria-label="' + TX.vue_aria + '">' +
+            '<button type="button" class="capitales" data-vue="3d" aria-pressed="false">' + TX.maquette_3d + '</button>' +
+            '<button type="button" class="capitales" data-vue="plan" aria-pressed="true">' + TX.plan + '</button>' +
           '</div>' +
           '<div class="carte__zoom">' +
-            '<button type="button" data-zoom="1" aria-label="Zoomer">+</button>' +
-            '<button type="button" data-zoom="-1" aria-label="Dézoomer">−</button>' +
-            '<button type="button" data-zoom="0" class="capitales">Recentrer</button>' +
+            '<button type="button" data-zoom="1" aria-label="' + TX.zoomer + '">+</button>' +
+            '<button type="button" data-zoom="-1" aria-label="' + TX.dezoomer + '">−</button>' +
+            '<button type="button" data-zoom="0" class="capitales">' + TX.recentrer + '</button>' +
           '</div>' +
         '</div>' +
         '<div class="carte__scene">' +
-          '<canvas class="carte__plan" tabindex="0" aria-label="Plan de situation du 101 boulevard Murat"></canvas>' +
+          '<canvas class="carte__plan" tabindex="0" aria-label="' + TX.plan_aria + '"></canvas>' +
           '<div class="carte__3d" hidden></div>' +
           '<div class="carte__info data" hidden></div>' +
         '</div>' +
         '<p class="carte__aide data">' +
-          '<span data-aide="plan">Glisser pour se déplacer · molette ou pincement pour zoomer · survoler un bâtiment pour sa hauteur.</span>' +
-          '<span data-aide="3d" hidden>Glisser pour tourner · clic droit ou Maj + glisser pour se déplacer · molette pour zoomer.</span>' +
-          ' Sources : IGN BD TOPO® (emprises et hauteurs réelles) ; bouches de métro © contributeurs OpenStreetMap.' +
+          '<span data-aide="plan">' + TX.aide_plan + '</span>' +
+          '<span data-aide="3d" hidden>' + TX.aide_3d + '</span>' +
+          TX.sources +
         '</p>' +
       '</div>';
     var barre = hote.querySelector('.carte__barre');
