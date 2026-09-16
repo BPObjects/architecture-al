@@ -2,6 +2,10 @@
    style.css de la maquette est copié tel quel ; ne figure ici que ce qui est nouveau :
    lien d'évitement, bloc « Écrire à l'agence », galerie et visionneuse des fiches, page introuvable. */
 
+/* Pied de page toujours en bas de l'écran, même sur une page courte (mentions légales, 404). */
+body { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+main { flex: 1 0 auto; }
+
 .evitement {
   position: absolute; left: var(--gouttiere); top: -60px; z-index: 30;
   background: var(--encre); color: var(--platre); padding: 8px 14px;
