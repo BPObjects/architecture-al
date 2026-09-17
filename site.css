@@ -41,8 +41,35 @@ a.envoyer { display: inline-block; text-decoration: none; }
   .logiciels .outil span:empty { display: none; }
 }
 
-/* ——— Fiche : vidéo et galerie ——— */
-.fiche__video { margin-top: 18px; }
+/* ——— Fiche : couverture ———
+   style.css ne donne pas height:auto aux images : la couverture gardait la hauteur de son attribut height (plafonnée
+   à 76vh) pendant que max-width rétrécissait sa largeur, d'où une image écrasée de 69 % sur téléphone tenu droit
+   (KW2, vu par AL le 17/09). En bloc plutôt qu'en flex : la règle des min/max des éléments remplacés garde les
+   proportions dans tous les moteurs ; object-fit en second rempart. */
+.fiche__image { display: block; }
+.fiche__image img { width: auto; height: auto; max-width: 100%; max-height: 76vh; margin-inline: auto; object-fit: contain; }
+
+/* ——— Fiche : vidéo et galerie ———
+   Vidéo : affiche locale + bouton ; site.js remplace le lien par le lecteur au clic (rien de YouTube avant). */
+.fiche__video { margin-top: 22px; }
+.video__lanceur {
+  position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden;
+  background: var(--encre); color: var(--platre); text-decoration: none;
+}
+.video__lanceur img { width: 100%; height: 100%; object-fit: cover; transition: opacity .25s; }
+.video__lanceur:hover img, .video__lanceur:focus-visible img { opacity: .8; }
+.video__bouton {
+  position: absolute; left: 50%; top: 50%; width: 68px; height: 68px; margin: -34px 0 0 -34px;
+  border-radius: 50%; background: rgba(29, 28, 26, .72); transition: background .25s;
+}
+.video__bouton::after {
+  content: ''; position: absolute; left: 27px; top: 22px;
+  border-style: solid; border-width: 12px 0 12px 20px; border-color: transparent transparent transparent var(--platre);
+}
+.video__lanceur:hover .video__bouton, .video__lanceur:focus-visible .video__bouton { background: var(--orange); }
+.video__libelle { position: absolute; left: 14px; bottom: 12px; font-size: var(--t-xs); text-shadow: 0 1px 3px rgba(0, 0, 0, .7); }
+.video__mention { margin: 8px 0 0; font-size: var(--t-xs); line-height: 1.5; color: var(--graphite); }
+.video iframe { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; background: var(--encre); }
 .galerie__grille {
   list-style: none; margin: 0; padding: 0;
   display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 22px;
@@ -54,19 +81,36 @@ a.envoyer { display: inline-block; text-decoration: none; }
 }
 .galerie__grille a:hover img { opacity: .86; }
 
-/* Visionneuse : <dialog> natif, Échap le ferme ; flèches gérées par site.js */
+/* Visionneuse : <dialog> natif, Échap le ferme. Les images sont côte à côte dans une piste à accroche horizontale
+   (scroll-snap) : le doigt ou le pavé tactile les fait glisser avec l'inertie du système ; boutons et flèches du
+   clavier font défiler la même piste (site.js). Chaque image remplit sa vue en object-fit: contain, sans déformation. */
 .visionneuse {
   width: 100vw; height: 100dvh; max-width: none; max-height: none;
-  margin: 0; padding: 0; border: 0;
+  margin: 0; padding: 0; border: 0; overflow: hidden;
   background: rgba(29, 28, 26, .96); color: var(--platre);
 }
 .visionneuse::backdrop { background: rgba(29, 28, 26, .6); }
-.visionneuse figure {
-  margin: 0; height: 100%; padding: 56px 72px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+/* la page derrière ne défile pas et ne se recharge pas au doigt tant que la visionneuse est ouverte (site.js) */
+html.visionneuse-ouverte { overflow: hidden; overscroll-behavior: none; }
+.visionneuse__piste {
+  display: flex; height: 100%;
+  overflow-x: auto; overflow-y: hidden; overscroll-behavior: contain;
+  scroll-snap-type: x mandatory; scrollbar-width: none;
 }
-.visionneuse img { max-width: 100%; max-height: calc(100dvh - 140px); width: auto; height: auto; }
-.visionneuse__compteur { font-size: var(--t-xs); color: var(--ombre); }
+.visionneuse__piste::-webkit-scrollbar { display: none; }
+.visionneuse__vue {
+  flex: 0 0 100%; position: relative; margin: 0;
+  scroll-snap-align: center; scroll-snap-stop: always;
+}
+.visionneuse__vue img {
+  position: absolute; top: 56px; left: 72px;
+  width: calc(100% - 144px); height: calc(100% - 112px); max-width: none;
+  object-fit: contain;
+}
+.visionneuse__compteur {
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); margin: 0;
+  font-size: var(--t-xs); color: var(--ombre); pointer-events: none;
+}
 .visionneuse button {
   position: absolute; background: none; border: 0; cursor: pointer;
   color: var(--platre); padding: 10px 14px;
@@ -76,9 +120,11 @@ a.envoyer { display: inline-block; text-decoration: none; }
 .visionneuse__precedent, .visionneuse__suivant { top: 50%; transform: translateY(-50%); font-size: 1.6rem; line-height: 1; }
 .visionneuse__precedent { left: 10px; }
 .visionneuse__suivant { right: 10px; }
+.visionneuse--seule .visionneuse__precedent, .visionneuse--seule .visionneuse__suivant { display: none; }
 @media (max-width: 640px) {
-  .visionneuse figure { padding: 56px 12px 72px; }
+  .visionneuse__vue img { left: 12px; width: calc(100% - 24px); height: calc(100% - 128px); }
   .visionneuse__precedent, .visionneuse__suivant { top: auto; bottom: 14px; transform: none; }
+  .visionneuse__compteur { bottom: 26px; }
 }
 
 /* ——— Page introuvable ——— */
