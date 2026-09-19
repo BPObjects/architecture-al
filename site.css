@@ -41,6 +41,14 @@ a.envoyer { display: inline-block; text-decoration: none; }
   .logiciels .outil span:empty { display: none; }
 }
 
+/* ——— Fiche : largeur du texte ———
+   style.css bride la colonne à 62 caractères : sur grand écran le texte n'occupait qu'un tiers de la place, et la
+   justification creusait des gouttières entre les mots (vu par AL le 19/09, qui demande des lignes plus larges).
+   100 caractères : la fonte du site est étroite, 88ch ne faisaient que 650 px de ligne. text-wrap: pretty évite
+   les dernières lignes orphelines là où le navigateur sait le faire (Chrome 117+, Safari 17.5+). */
+.fiche__texte { max-width: min(100%, 100ch); }
+.fiche__texte p { text-wrap: pretty; }
+
 /* ——— Fiche : couverture ———
    style.css ne donne pas height:auto aux images : la couverture gardait la hauteur de son attribut height (plafonnée
    à 76vh) pendant que max-width rétrécissait sa largeur, d'où une image écrasée de 69 % sur téléphone tenu droit
