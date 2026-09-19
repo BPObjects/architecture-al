@@ -127,5 +127,15 @@ html.visionneuse-ouverte { overflow: hidden; overscroll-behavior: none; }
   .visionneuse__compteur { bottom: 26px; }
 }
 
+/* ——— L'agence : logos des partenaires, tous dans une boîte de même taille ——— */
+.partenaires { align-items: center; gap: 26px 40px; }
+.partenaire__logo { width: auto; height: auto; max-width: 150px; max-height: 46px; object-fit: contain; }
+.partenaire__logo--ramasse { max-height: 34px; }
+@media (max-width: 640px) {
+  .partenaires { gap: 22px 28px; }
+  .partenaire__logo { max-width: 116px; max-height: 38px; }
+  .partenaire__logo--ramasse { max-height: 30px; }
+}
+
 /* ——— Page introuvable ——— */
 .introuvable p { max-width: 62ch; margin: 0 0 22px; }
