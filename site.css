@@ -41,6 +41,35 @@ a.envoyer { display: inline-block; text-decoration: none; }
   .logiciels .outil span:empty { display: none; }
 }
 
+/* ——— Accueil : galerie calculée plein écran, logo au centre en fondu (15/10, sortie de Wix) ———
+   Classe de page « page-accueil » : « .accueil » existe déjà dans style.css (maquette) et y fixe une hauteur.
+   L'en-tête reste la bande claire du site, comme sur l'accueil Wix (un menu posé sur les piliers clairs se lisait mal) ;
+   son petit logo s'efface, le grand est au centre de la scène, qui remplit le reste de l'écran.
+   #galerie montre l'image fixe (premier instant exact de l'animation) jusqu'au premier dessin, puis accueil.js lui
+   donne la classe « pret » : le dégradé du ciel, vu par les fentes du canevas transparent, prend le relais. */
+.page-accueil .entete__logo { visibility: hidden; }
+.accueil-scene { position: relative; height: calc(100vh - var(--entete)); height: calc(100svh - var(--entete)); min-height: 420px; overflow: hidden; }
+.accueil-scene__galerie {
+  position: absolute; inset: 0;
+  background: #e9e4da url(/img/accueil-colonnade-1600x900.webp) center / cover no-repeat;
+}
+@media (max-aspect-ratio: 3/4) {
+  .accueil-scene__galerie { background-image: url(/img/accueil-colonnade-780x1688.webp); }
+}
+.accueil-scene__galerie.pret {
+  background: linear-gradient(to bottom, #a6c0c6 0%, #a8c2c6 34%, #b6c9c8 41%, #d0d6d1 46%, #e0dfd8 50%, #e9e4da 100%);
+}
+.accueil-scene__galerie canvas { display: block; }
+.accueil-scene__lien { position: absolute; inset: 0; z-index: 2; display: flex; align-items: center; justify-content: center; }
+.accueil-scene__logo {
+  width: min(31vw, 520px); min-width: 220px; height: auto;
+  animation: logo-apparition 2.2s ease-out .6s both;      /* fondu demandé par AL le 15/10 */
+}
+@keyframes logo-apparition { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .accueil-scene__logo { animation: none; } }
+.accueil-scene__lien:focus-visible { outline: none; }
+.accueil-scene__lien:focus-visible .accueil-scene__logo { outline: 2px solid var(--orange); outline-offset: 14px; }
+
 /* ——— Fiche : largeur du texte ———
    style.css bride la colonne à 62 caractères : sur grand écran le texte n'occupait qu'un tiers de la place, et la
    justification creusait des gouttières entre les mots (vu par AL le 19/09, qui demande des lignes plus larges).
