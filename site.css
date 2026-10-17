@@ -41,6 +41,14 @@ a.envoyer { display: inline-block; text-decoration: none; }
   .logiciels .outil span:empty { display: none; }
 }
 
+/* ——— L'agence : six membres depuis le 18/10 (John Dimosi) ———
+   style.css range l'équipe en 5 colonnes au-dessus de 1000 px : le sixième tombait seul sur un second rang.
+   Une rangée de six dès 1280 px (cartes de 181 px et plus) ; entre 1001 et 1279 px, deux rangs de trois plutôt que
+   des cartes de 138 px. En dessous, inchangé (3 puis 2 colonnes, rangs pleins). site.js place la bio sous le bon
+   rang quel que soit le nombre de colonnes. */
+@media (min-width: 1001px) and (max-width: 1279px) { .equipe { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1280px) { .equipe { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+
 /* ——— Accueil : galerie calculée plein écran, logo au centre en fondu (15/10, sortie de Wix) ———
    Classe de page « page-accueil » : « .accueil » existe déjà dans style.css (maquette) et y fixe une hauteur.
    L'en-tête reste la bande claire du site, comme sur l'accueil Wix (un menu posé sur les piliers clairs se lisait mal) ;
